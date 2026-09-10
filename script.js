@@ -187,46 +187,95 @@ function endRound() {
 
 function showTraditionalRanking() {
   const ranking = [...players].sort((a, b) => a.apparentFailures - b.apparentFailures);
-  ui.rankingBoard.innerHTML = ranking
-    .map((player, index) => {
-      const place = index + 1;
-      const badge =
-        place === 1
-          ? `<span class="badge good">Funcionário do Mês</span>`
-          : place === TOTAL_PLAYERS
-            ? `<span class="badge bad">Alerta de Baixa Eficiência</span>`
-            : "";
-      return `<article class="result-card">
-        <strong>${place}º lugar — ${player.name}</strong> ${badge}
-        <div>Falhas aparentes: ${player.apparentFailures}</div>
-        <div>Acertos: ${player.hits}</div>
-      </article>`;
-    })
-    .join("");
+  ui.rankingBoard.replaceChildren();
+
+  ranking.forEach((player, index) => {
+    const place = index + 1;
+    const card = document.createElement("article");
+    card.className = "result-card";
+
+    const title = document.createElement("strong");
+    title.textContent = `${place}º lugar — ${player.name}`;
+    card.appendChild(title);
+
+    if (place === 1 || place === TOTAL_PLAYERS) {
+      const badge = document.createElement("span");
+      badge.className = `badge ${place === 1 ? "good" : "bad"}`;
+      badge.textContent = place === 1 ? "Funcionário do Mês" : "Alerta de Baixa Eficiência";
+      card.append(" ");
+      card.appendChild(badge);
+    }
+
+    const failures = document.createElement("div");
+    failures.textContent = `Falhas aparentes: ${player.apparentFailures}`;
+    card.appendChild(failures);
+
+    const hits = document.createElement("div");
+    hits.textContent = `Acertos: ${player.hits}`;
+    card.appendChild(hits);
+
+    ui.rankingBoard.appendChild(card);
+  });
 
   const first = ranking[0];
   const last = ranking[ranking.length - 1];
-  ui.managementMessage.innerHTML = `
-    <p><strong>Elogio executivo:</strong> ${first.name}, sua performance indica alta produtividade e disciplina operacional.</p>
-    <p><strong>Advertência formal:</strong> ${last.name}, identificamos sinais de baixa atenção e eficiência abaixo do esperado.</p>
-  `;
+  ui.managementMessage.replaceChildren();
+
+  const praise = document.createElement("p");
+  const praiseStrong = document.createElement("strong");
+  praiseStrong.textContent = "Elogio executivo:";
+  praise.appendChild(praiseStrong);
+  praise.append(` ${first.name}, sua performance indica alta produtividade e disciplina operacional.`);
+
+  const warning = document.createElement("p");
+  const warningStrong = document.createElement("strong");
+  warningStrong.textContent = "Advertência formal:";
+  warning.appendChild(warningStrong);
+  warning.append(
+    ` ${last.name}, identificamos sinais de baixa atenção e eficiência abaixo do esperado.`,
+  );
+
+  ui.managementMessage.append(praise, warning);
   showScreen("phase1");
 }
 
 function showAudit() {
-  ui.auditBoard.innerHTML = players
-    .map((player) => {
-      const rate = player.validClicks > 0 ? (player.systemErrors / player.validClicks) * 100 : 0;
-      return `<article class="result-card">
-        <strong>${player.name}</strong>
-        <div>Cliques válidos processados: ${player.validClicks}</div>
-        <div>Erros sistêmicos injetados: ${player.systemErrors}</div>
-        <div>Taxa observada: ${rate.toFixed(1)}%</div>
-        <div>Tempo médio de reação: ${player.avgReactionMs.toFixed(0)}ms</div>
-        <div class="bar"><span style="width:${Math.min(100, rate)}%"></span></div>
-      </article>`;
-    })
-    .join("");
+  ui.auditBoard.replaceChildren();
+
+  players.forEach((player) => {
+    const rate = player.validClicks > 0 ? (player.systemErrors / player.validClicks) * 100 : 0;
+    const card = document.createElement("article");
+    card.className = "result-card";
+
+    const name = document.createElement("strong");
+    name.textContent = player.name;
+    card.appendChild(name);
+
+    const validClicks = document.createElement("div");
+    validClicks.textContent = `Cliques válidos processados: ${player.validClicks}`;
+    card.appendChild(validClicks);
+
+    const systemErrors = document.createElement("div");
+    systemErrors.textContent = `Erros sistêmicos injetados: ${player.systemErrors}`;
+    card.appendChild(systemErrors);
+
+    const observedRate = document.createElement("div");
+    observedRate.textContent = `Taxa observada: ${rate.toFixed(1)}%`;
+    card.appendChild(observedRate);
+
+    const avgReaction = document.createElement("div");
+    avgReaction.textContent = `Tempo médio de reação: ${player.avgReactionMs.toFixed(0)}ms`;
+    card.appendChild(avgReaction);
+
+    const bar = document.createElement("div");
+    bar.className = "bar";
+    const fill = document.createElement("span");
+    fill.style.width = `${Math.min(100, rate)}%`;
+    bar.appendChild(fill);
+    card.appendChild(bar);
+
+    ui.auditBoard.appendChild(card);
+  });
   showScreen("phase2");
 }
 
