@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Experimento das Contas Vermelhas</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main id="app" class="screen screen-setup">
+      <header>
+        <h1>Simulação: Experimento das Contas Vermelhas</h1>
+        <p>Arcade corporativo para 4 jogadores (pass-and-play).</p>
+      </header>
+
+      <section id="setup-screen" class="panel visible">
+        <h2>Configurar Jogadores</h2>
+        <div class="players-grid">
+          <label>Jogador 1 <input type="text" id="player-1" maxlength="24" /></label>
+          <label>Jogador 2 <input type="text" id="player-2" maxlength="24" /></label>
+          <label>Jogador 3 <input type="text" id="player-3" maxlength="24" /></label>
+          <label>Jogador 4 <input type="text" id="player-4" maxlength="24" /></label>
+        </div>
+        <button id="start-btn" class="btn btn-primary">Iniciar Simulação</button>
+      </section>
+
+      <section id="transition-screen" class="panel hidden">
+        <h2 id="transition-title"></h2>
+        <p>Clique para começar a rodada de 30 segundos.</p>
+        <button id="play-btn" class="btn btn-primary">Começar Rodada</button>
+      </section>
+
+      <section id="game-screen" class="panel hidden">
+        <div class="hud">
+          <span id="hud-player"></span>
+          <span>Tempo: <strong id="hud-time">30</strong>s</span>
+          <span>Acertos: <strong id="hud-hits">0</strong></span>
+          <span>Falhas aparentes: <strong id="hud-fails">0</strong></span>
+        </div>
+        <div id="game-area" class="game-area"></div>
+      </section>
+
+      <section id="phase1-screen" class="panel hidden dashboard-traditional">
+        <h2>Fase 1 — Ranking Tradicional</h2>
+        <div id="ranking-board" class="ranking-board"></div>
+        <div id="management-message" class="message-box"></div>
+        <button id="reveal-btn" class="btn btn-warning">Revelar Auditoria do Sistema</button>
+      </section>
+
+      <section id="phase2-screen" class="panel hidden dashboard-analytics">
+        <h2>Fase 2 — A Revelação Demingiana</h2>
+        <p>
+          Todos operaram sob a mesma taxa oculta de erro sistêmico: <strong>20%</strong>.
+        </p>
+        <div id="audit-board" class="audit-board"></div>
+        <p class="lesson">
+          Lição de Deming: variações individuais observadas em curto prazo podem ser produto do
+          sistema, e não de mérito ou culpa pessoal.
+        </p>
+        <button id="restart-btn" class="btn btn-primary">Reiniciar Simulação</button>
+      </section>
+    </main>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
